@@ -68,8 +68,7 @@ public class SavingsAccountJdbcDAOImpl implements SavingsAccountDAO{
 	@Override
 	public SavingsAccount getAccountByName(String accountHolderName)
 			throws ClassNotFoundException, SQLException, AccountNotFoundException {
-		// TODO Auto-generated method stub
-		return null;
+		return jdbcTemplate.queryForObject("SELECT* FROM ACCOUNT where accountHolderName=?",new Object[]{accountHolderName},new SavingsAccountMapper());
 	}
 
 	@Override
@@ -78,6 +77,21 @@ public class SavingsAccountJdbcDAOImpl implements SavingsAccountDAO{
 				account.isSalary(),
 				account.getBankAccount().getAccountNumber()});
 		return false;
+	}
+
+
+	@Override
+	public List<SavingsAccount> sortByname() throws ClassNotFoundException, SQLException{
+	  return jdbcTemplate.query("SELECT * FROM account order By accountHolderName",new Object[] {},new SavingsAccountMapper());
+		 
+	
+		
+	}
+
+	@Override
+	public List<SavingsAccount> sortByBalance() throws ClassNotFoundException, SQLException {
+		
+	 return jdbcTemplate.query("SELECT * FROM account order By salaried",new Object[] {},new SavingsAccountMapper());
 	}
 
 }

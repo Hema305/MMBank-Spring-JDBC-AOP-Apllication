@@ -2,10 +2,11 @@ package com.moneymoney.account.service;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import com.moneymoney.account.SavingsAccount;
 import com.moneymoney.account.dao.SavingsAccountDAO;
 import com.moneymoney.account.factory.AccountFactory;
@@ -41,14 +42,14 @@ public class SavingsAccountServiceImpl implements SavingsAccountService {
 
 	@Override
 	public void deposit(SavingsAccount account, double amount) throws ClassNotFoundException, SQLException {
-		if (amount > 0) {
+		Logger logger=Logger.getLogger(SavingsAccountServiceImpl.class.getName());
+	
 			double currentBalance = account.getBankAccount().getAccountBalance();
 			currentBalance += amount;
+			logger.info("successfully in deposit method");
 			savingsAccountDAO.updateBalance(account.getBankAccount().getAccountNumber(), currentBalance);
 			//savingsAccountDAO.commit();
-		}else {
-			throw new InvalidInputException("Invalid Input Amount!");
-		}
+		
 	}
 	@Override
 	public void withdraw(SavingsAccount account, double amount) throws ClassNotFoundException, SQLException {
@@ -62,20 +63,14 @@ public class SavingsAccountServiceImpl implements SavingsAccountService {
 		}
 	}
 
-	@Override
+	@Transactional(rollbackForClassName= {"Throwable"})
 	public void fundTransfer(SavingsAccount sender, SavingsAccount receiver, double amount)
 			throws ClassNotFoundException, SQLException {
-		try {
+		
 			withdraw(sender, amount);
 			deposit(receiver, amount);
 			DBUtil.commit();
-		} catch (InvalidInputException | InsufficientFundsException e) {
-			e.printStackTrace();
-			DBUtil.rollback();
-		} catch(Exception e) {
-			e.printStackTrace();
-			DBUtil.rollback();
-		}
+		
 	}
 
 	
@@ -109,6 +104,17 @@ public class SavingsAccountServiceImpl implements SavingsAccountService {
 	public boolean updateAccount(SavingsAccount account) throws ClassNotFoundException, SQLException {
 		// TODO Auto-generated method stub
 		return savingsAccountDAO.updateAccountType(account);
+	}
+
+	public List<SavingsAccount> sortByname() throws ClassNotFoundException, SQLException {
+		return savingsAccountDAO.sortByname();
+		
+	}
+
+	
+	public List<SavingsAccount> sortByBalance() throws ClassNotFoundException, SQLException {
+		
+		 return savingsAccountDAO.sortByBalance();
 	}
 
 	

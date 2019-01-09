@@ -160,5 +160,45 @@ public class SavingsAccountDAOImpl implements SavingsAccountDAO {
 		throw new AccountNotFoundException("Account with account holder name "+accountHolderName+" does not exist.");
 	}
 
+
+	public List<SavingsAccount> sortByname() throws ClassNotFoundException, SQLException {
+		Connection connection = DBUtil.getConnection();
+		PreparedStatement preparedStatement = connection.prepareStatement
+				("SELECT * FROM account order by account_hn");
+		List<SavingsAccount> savingsAccounts=new ArrayList<SavingsAccount>();
+		ResultSet resultSet = preparedStatement.executeQuery();
+		while (resultSet.next()) {                                             // Check if row(s) is present in table
+			int accountNumber = resultSet.getInt(1);
+			String accountHolderName = resultSet.getString("accountHolderName");
+			double accountBalance = resultSet.getDouble(3);
+			boolean salary = resultSet.getBoolean("salary");
+			SavingsAccount savingsAccount = new SavingsAccount(accountNumber, accountHolderName, accountBalance,
+					salary);
+			savingsAccounts.add(savingsAccount);
+		}
+		return savingsAccounts;
+	}
+
+
+	public List<SavingsAccount> sortByBalance() throws ClassNotFoundException, SQLException {
+		Connection connection = DBUtil.getConnection();
+		PreparedStatement preparedStatement = connection.prepareStatement
+				("SELECT * FROM account order by salaried");
+		List<SavingsAccount> savingsAccounts=new ArrayList<SavingsAccount>();
+		ResultSet resultSet = preparedStatement.executeQuery();
+		while (resultSet.next()) {                                             // Check if row(s) is present in table
+			int accountNumber = resultSet.getInt(1);
+			String accountHolderName = resultSet.getString("account_hn");
+			double accountBalance = resultSet.getDouble(3);
+			boolean salary = resultSet.getBoolean("salary");
+			SavingsAccount savingsAccount = new SavingsAccount(accountNumber, accountHolderName, accountBalance,
+					salary);
+			savingsAccounts.add(savingsAccount);
+		}
+		return savingsAccounts;
+	}
+
+	
+
 	
 }

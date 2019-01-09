@@ -2,6 +2,7 @@ package com.moneymoney.account.ui;
 
 import com.moneymoney.account.ui.AccountCUI;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -93,6 +94,9 @@ public class AccountCUI {
 				e1.printStackTrace();
 			}
 			break;
+		case 10:
+			sortAllAccounts();
+			break;
 		case 11:
 			try {
 				DBUtil.closeConnection();
@@ -106,6 +110,36 @@ public class AccountCUI {
 			break;
 		}
 
+	}
+
+	private void sortAllAccounts()  throws ClassNotFoundException,
+	SQLException{
+		List<SavingsAccount> savingsAccountList = new ArrayList<SavingsAccount>();
+		System.out.println("enter 1 for sort by name");
+		System.out.println("enter 2 for sort by salaried type");
+
+		int orderType = scanner.nextInt();
+		switch (orderType) {
+		case 1:
+			try {
+				savingsAccountList = savingsAccountService.sortByname();
+				for (SavingsAccount savingsAccount : savingsAccountList) {
+					System.out.println(savingsAccount);
+				}
+			} catch (ClassNotFoundException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			break;
+		case 2:
+			savingsAccountList = savingsAccountService.sortByBalance();
+			for (SavingsAccount savingsAccount : savingsAccountList) {
+				System.out.println(savingsAccount);
+			}
+			break;
+
+		}
+		
 	}
 
 	private void selectOptionsToUpdate(int select, SavingsAccount savingsAccount) {

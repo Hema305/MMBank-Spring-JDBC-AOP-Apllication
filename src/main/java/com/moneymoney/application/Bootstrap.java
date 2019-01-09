@@ -7,10 +7,11 @@ import java.sql.SQLException;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Component;
 
 import com.moneymoney.account.ui.AccountCUI;
 import com.moneymoney.exception.AccountNotFoundException;
-
+@Component
 public class Bootstrap {
 	/*
 	 * static { try { Class.forName("com.mysql.jdbc.Driver"); Connection connection

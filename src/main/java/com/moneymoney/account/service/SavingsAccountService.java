@@ -25,6 +25,10 @@ public interface SavingsAccountService {
 
 	boolean updateAccount(SavingsAccount account) throws ClassNotFoundException, SQLException;
 
+	List<SavingsAccount> sortByname() throws ClassNotFoundException, SQLException;
+
+	List<SavingsAccount> sortByBalance() throws ClassNotFoundException, SQLException;
+
 
 	
 }
